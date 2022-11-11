@@ -14,9 +14,7 @@ def get_credentials():
     credentials = None
 
     if os.path.exists("token.json"):
-        log.info(
-            "Generating credentials from authorized user file: token.json"
-        )
+        log.info("Generating credentials from authorized user file")
         credentials = Credentials.from_authorized_user_file(
             "token.json", SCOPES
         )

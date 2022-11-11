@@ -9,7 +9,6 @@ log = logging.getLogger(__name__)
 
 def get_id(label_name: str):
     try:
-        print(__package__)
         creds = __auth.get_credentials()
         service = build("gmail", "v1", credentials=creds)
         results = service.users().labels().list(userId="me").execute()
@@ -19,7 +18,7 @@ def get_id(label_name: str):
             return
 
         label_found = filter(lambda label: label["name"] == label_name, labels)
-        return label_found.__next__()
+        return label_found.__next__()["id"]
 
     except HttpError as error:
         log.error(f"An error occurred: {error}")

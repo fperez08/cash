@@ -7,9 +7,7 @@ from apis import google_auth as __auth
 log = logging.getLogger(__name__)
 
 
-def get_messages_id(
-    max_results: int = 1, label_id: str = None, query: str = None
-):
+def get_ids(max_results: int = 1, label_id: str = None, query: str = None):
     try:
         creds = __auth.get_credentials()
         service = build("gmail", "v1", credentials=creds)
@@ -31,6 +29,29 @@ def get_messages_id(
             return
 
         return list(map(lambda m: m["id"], messages))
+
+    except HttpError as error:
+        log.error(f"An error occurred: {error}")
+        return
+
+
+def get_raw_content(label_ids: list):
+    try:
+        creds = __auth.get_credentials()
+        service = build("gmail", "v1", credentials=creds)
+        results = (
+            service.users()
+            .messages()
+            .get(userId="me", id=label_ids[0], format="raw")
+            .execute()
+        )
+        # message = results.get("payload", {})
+
+        if not results:
+            log.error("Message not found")
+            return
+
+        return results.get("raw", "")
 
     except HttpError as error:
         log.error(f"An error occurred: {error}")

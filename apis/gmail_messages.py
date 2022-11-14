@@ -1,27 +1,22 @@
 import logging
 
-from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from apis import google_auth as __auth
+from apis import google_client_factory as google_client
 
 log = logging.getLogger(__name__)
 
 
 def get_ids(max_results: int = 1, label_id: str = None, query: str = None):
     try:
-        creds = __auth.get_credentials()
-        service = build("gmail", "v1", credentials=creds)
-        results = (
-            service.users()
-            .messages()
-            .list(
-                userId="me",
-                labelIds=label_id,
-                q=query,
-                maxResults=max_results,
-            )
-            .execute()
+        msg_service = google_client.get_gmail_service(
+            google_client.GmailResource.messages
         )
+        results = msg_service.list(
+            userId="me",
+            labelIds=label_id,
+            q=query,
+            maxResults=max_results,
+        ).execute()
         messages = results.get("messages", [])
 
         if not messages:
@@ -36,21 +31,20 @@ def get_ids(max_results: int = 1, label_id: str = None, query: str = None):
 
 
 def get_raw_content(label_ids: list):
-    try:
-        creds = __auth.get_credentials()
-        service = build("gmail", "v1", credentials=creds)
-        results = (
-            service.users()
-            .messages()
-            .get(userId="me", id=label_ids[0], format="raw")
-            .execute()
-        )
-        # message = results.get("payload", {})
+    return list(map(lambda l: get_content(l), label_ids))
 
+
+def get_content(label_id: int):
+    try:
+        msg_service = google_client.get_gmail_service(
+            google_client.GmailResource.messages
+        )
+        results = msg_service.get(
+            userId="me", id=label_id, format="raw"
+        ).execute()
         if not results:
             log.error("Message not found")
             return
-
         return results.get("raw", "")
 
     except HttpError as error:

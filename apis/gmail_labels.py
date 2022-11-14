@@ -1,17 +1,17 @@
 import logging
 
-from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from apis import google_auth as __auth
+from apis import google_client_factory as google_client
 
 log = logging.getLogger(__name__)
 
 
 def get_id(label_name: str):
     try:
-        creds = __auth.get_credentials()
-        service = build("gmail", "v1", credentials=creds)
-        results = service.users().labels().list(userId="me").execute()
+        label_service = google_client.get_gmail_service(
+            google_client.GmailResource.labels
+        )
+        results = label_service.list(userId="me").execute()
         labels = results.get("labels", [])
         if not labels:
             log.error("Labels not found")

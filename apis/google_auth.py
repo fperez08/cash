@@ -23,10 +23,9 @@ def get_credentials(credentials_path: str):
         )
 
     if not credentials or not credentials.valid:
-        log.info(f"Credentials valid: ${credentials.valid}")
+        log.info("Credentials not valid")
         if credentials and credentials.expired and credentials.refresh_token:
-            log.info(f"Credentials expired: {credentials.expired}")
-            log.info("Token needs to be refreshed")
+            log.info("Credentials expired...token needs to be refreshed")
             credentials.refresh(Request())
         else:
             log.info("Generate credentials")

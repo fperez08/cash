@@ -10,8 +10,11 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 log = logging.getLogger(__name__)
 
 
-def get_credentials():
+def get_credentials(credentials_path: str):
     credentials = None
+
+    if not os.path.exists(credentials_path):
+        raise FileNotFoundError(f"{credentials_path} file not found")
 
     if os.path.exists("token.json"):
         log.info("Generating credentials from authorized user file")
@@ -28,7 +31,7 @@ def get_credentials():
         else:
             log.info("Generate credentials")
             flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", SCOPES
+                credentials_path, SCOPES
             )
             credentials = flow.run_local_server(port=0)
         with open("token.json", "w") as token:

@@ -1,8 +1,8 @@
 import logging
 
-from apis import gmail_labels as glabels, gmail_messages as gmessage
+from apis import gmail_messages as gmessage
 from logger import setup_global_logging
-from email_content import decode_message, get_content, get_data
+from email_content import get_email_data
 
 log = logging.getLogger(__name__)
 logger_list = [
@@ -10,16 +10,19 @@ logger_list = [
     logging.getLogger("apis"),
 ]
 
+withdrawal_query = "label:withdrawal  after:2022/11/8 before:2022/11/23"
+regexs = [
+    r"\$.+M.N.",
+    r"[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \w{2}",
+]
+
 
 def main():
     setup_global_logging(level=logging.DEBUG, loggers=logger_list)
-    label = glabels.get_id("Withdrawal")
-    messages_id = gmessage.get_ids(max_results=2, label_id=label)
+    messages_id = gmessage.get_ids(max_results=7, query=withdrawal_query)
     messages = gmessage.get_raw_content(messages_id)
-    message_decoded = decode_message(messages[0])
-    content = get_content(message_decoded)
-    data = get_data(content, r"<b>\$(.+)<\/b>")
-    log.info(data)
+    result = get_email_data(messages, regexs)
+    log.info(result)
 
 
 if __name__ == "__main__":

@@ -1,15 +1,15 @@
 import logging
 
 from googleapiclient.errors import HttpError
-from apis import google_client_factory as google_client
+from apis import google_services
 
 log = logging.getLogger(__name__)
 
 
-def get_ids(max_results: int = 1, label_id: str = None, query: str = None):
+def get_ids(max_results: int = None, label_id: str = None, query: str = None):
     try:
-        msg_service = google_client.get_gmail_service(
-            google_client.GmailResource.messages
+        msg_service = google_services.get_gmail(
+            google_services.GmailResource.messages
         )
         results = msg_service.list(
             userId="me",
@@ -36,8 +36,8 @@ def get_raw_content(label_ids: list):
 
 def get_content(label_id: int):
     try:
-        msg_service = google_client.get_gmail_service(
-            google_client.GmailResource.messages
+        msg_service = google_services.get_gmail(
+            google_services.GmailResource.messages
         )
         results = msg_service.get(
             userId="me", id=label_id, format="raw"

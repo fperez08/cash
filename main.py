@@ -1,6 +1,6 @@
 import logging
 
-from apis import gmail_messages as gmessage
+from apis import gmail_messages as gmessage, google_sheets as sheets
 from logger import setup_global_logging
 from email_content import get_email_data
 
@@ -15,14 +15,21 @@ regexs = [
     r"\$.+M.N.",
     r"[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \w{2}",
 ]
+document_id = "19isFSGeTYZavZI2PyDcvNcG8_v38SifEFTXapzntV3M"
+start_point = "withdrawals!A2:B"
 
 
 def main():
     setup_global_logging(level=logging.DEBUG, loggers=logger_list)
-    messages_id = gmessage.get_ids(max_results=7, query=withdrawal_query)
+    messages_id = gmessage.get_ids(query=withdrawal_query)
     messages = gmessage.get_raw_content(messages_id)
     result = get_email_data(messages, regexs)
+
     log.info(result)
+
+    sheets.update_values(
+        spreadsheet_id=document_id, range=start_point, values=result
+    )
 
 
 if __name__ == "__main__":

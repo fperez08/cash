@@ -14,7 +14,7 @@ class GmailResource(enum.Enum):
     messages = 1
 
 
-def get_gmail_service(
+def get_gmail(
     resource: GmailResource,
     service_name: str = "gmail",
     version: str = "v1",
@@ -29,3 +29,8 @@ def get_gmail_service(
     else:
         log.error(f"Incorrect gmail resource: {resource.name}")
         return
+
+
+def get_spreadsheet(service_name: str = "sheets", version: str = "v4"):
+    creds = memoize_auth("credentials.json")
+    return build(service_name, version, credentials=creds).spreadsheets()

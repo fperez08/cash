@@ -16,7 +16,6 @@ regexs = [
     r"[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \w{2}",
 ]
 document_id = "19isFSGeTYZavZI2PyDcvNcG8_v38SifEFTXapzntV3M"
-start_point = "withdrawals!A2:B"
 
 
 def main():
@@ -24,12 +23,7 @@ def main():
     messages_id = gmessage.get_ids(query=withdrawal_query)
     messages = gmessage.get_raw_content(messages_id)
     result = get_email_data(messages, regexs)
-
-    log.info(result)
-
-    sheets.update_values(
-        spreadsheet_id=document_id, range=start_point, values=result
-    )
+    sheets.save_data(spreadsheet_id=document_id, values=result)
 
 
 if __name__ == "__main__":

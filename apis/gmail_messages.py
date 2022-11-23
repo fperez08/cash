@@ -8,9 +8,7 @@ log = logging.getLogger(__name__)
 
 def get_ids(max_results: int = None, label_id: str = None, query: str = None):
     try:
-        msg_service = google_services.get_gmail(
-            google_services.GmailResource.messages
-        )
+        msg_service = google_services.get_gmail_messages()
         results = msg_service.list(
             userId="me",
             labelIds=label_id,
@@ -36,9 +34,7 @@ def get_raw_content(label_ids: list):
 
 def get_content(label_id: int):
     try:
-        msg_service = google_services.get_gmail(
-            google_services.GmailResource.messages
-        )
+        msg_service = google_services.get_gmail_messages()
         results = msg_service.get(
             userId="me", id=label_id, format="raw"
         ).execute()

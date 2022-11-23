@@ -1,4 +1,5 @@
 import logging
+import json
 
 from apis import gmail_messages as gmessage, google_sheets as sheets
 from logger import setup_global_logging
@@ -23,7 +24,13 @@ def main():
     messages_id = gmessage.get_ids(query=withdrawal_query)
     messages = gmessage.get_raw_content(messages_id)
     result = get_email_data(messages, regexs)
-    sheets.save_data(spreadsheet_id=document_id, values=result)
+    with open("spreadsheets_config.json", "r") as json_data_file:
+        target_sheet = json.load(json_data_file)
+        sheets.update_values(
+            spreadsheet_id=document_id,
+            range=target_sheet["target"],
+            values=result,
+        )
 
 
 if __name__ == "__main__":

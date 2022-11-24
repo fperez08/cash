@@ -10,6 +10,8 @@ log = logging.getLogger(__name__)
 logger_list = [
     logging.getLogger("__main__"),
     logging.getLogger("apis"),
+    logging.getLogger("email_content"),
+    logging.getLogger("utils"),
 ]
 
 

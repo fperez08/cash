@@ -1,4 +1,7 @@
 import argparse
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def memoize(func):

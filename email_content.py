@@ -1,6 +1,9 @@
 import email
 import base64
 import re
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def decode_message(content: str):
@@ -29,6 +32,7 @@ def get_data(text_message: str, regexs: list):
 
 
 def get_email_data(messages: list, regexs: list):
+    log.info("Getting data from the emails")
     messages_decoded = list(map(lambda m: decode_message(m), messages))
     messages_content = list(map(lambda m: get_content(m), messages_decoded))
     return list(map(lambda m: get_data(m, regexs), messages_content))

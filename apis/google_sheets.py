@@ -9,6 +9,7 @@ log = logging.getLogger(__name__)
 
 def update_values(spreadsheet_id: str, range: str, values: list):
     try:
+        log.info("Updating sheet values...")
         sheets = google_services.get_spreadsheet().values()
         body = {"values": values}
         table_size = __get_range(range, len(values))

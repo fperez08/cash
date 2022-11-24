@@ -4,6 +4,7 @@ import json
 from apis import gmail_messages as gmessage, google_sheets as sheets
 from logger import setup_global_logging
 from email_content import get_email_data
+from utils import get_gmail_query
 
 log = logging.getLogger(__name__)
 logger_list = [
@@ -11,24 +12,18 @@ logger_list = [
     logging.getLogger("apis"),
 ]
 
-withdrawal_query = "label:withdrawal  after:2022/11/8 before:2022/11/23"
-regexs = [
-    r"\$.+M.N.",
-    r"[0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} \w{2}",
-]
-document_id = "19isFSGeTYZavZI2PyDcvNcG8_v38SifEFTXapzntV3M"
-
 
 def main():
     setup_global_logging(level=logging.DEBUG, loggers=logger_list)
-    messages_id = gmessage.get_ids(query=withdrawal_query)
-    messages = gmessage.get_raw_content(messages_id)
-    result = get_email_data(messages, regexs)
-    with open("spreadsheets_config.json", "r") as json_data_file:
-        target_sheet = json.load(json_data_file)
+    withdrawal_query = get_gmail_query()
+    with open("cash_config.json", "r") as json_data_file:
+        config = json.load(json_data_file)
+        messages_id = gmessage.get_ids(query=withdrawal_query)
+        messages = gmessage.get_raw_content(messages_id)
+        result = get_email_data(messages, config["email"]["search_patterns"])
         sheets.update_values(
-            spreadsheet_id=document_id,
-            range=target_sheet["target"],
+            spreadsheet_id=config["sheets"]["document_id"],
+            range=config["sheets"]["table_range"],
             values=result,
         )
 

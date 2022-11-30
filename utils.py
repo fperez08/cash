@@ -1,5 +1,6 @@
 import argparse
 import logging
+from datetime import datetime, timedelta
 
 log = logging.getLogger(__name__)
 
@@ -34,5 +35,18 @@ def get_gmail_query():
         if key != "days":
             query = f"{key}:{value} "
         else:
-            query = query + value
+            date_range = get_date_range(int(value))
+            query = query + date_range
+    log.info(query)
     return query
+
+
+def get_date_range(days: int):
+    date_format = "%Y/%m/%d"
+    after = "after:"
+    before = "before:"
+    current_date = datetime.now()
+    after_date = current_date - timedelta(days=days)
+    before = before + current_date.date().strftime(date_format)
+    after = after + after_date.date().strftime(date_format)
+    return after + " " + before

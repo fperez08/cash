@@ -1,5 +1,6 @@
 import logging
 import json
+import os
 
 from apis import gmail_messages as gmessage, google_sheets as sheets
 from logger import setup_global_logging
@@ -28,6 +29,8 @@ def main():
             range=config["sheets"]["table_range"],
             values=result,
         )
+    if os.path.exists("token.json"):
+        os.remove("token.json")
 
 
 if __name__ == "__main__":

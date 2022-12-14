@@ -1,3 +1,4 @@
+import os
 import argparse
 import logging
 from datetime import datetime, timedelta
@@ -37,7 +38,6 @@ def get_gmail_query():
         else:
             date_range = get_date_range(int(value))
             query = query + date_range
-    log.info(query)
     return query
 
 
@@ -50,3 +50,10 @@ def get_date_range(days: int):
     before = before + current_date.date().strftime(date_format)
     after = after + after_date.date().strftime(date_format)
     return after + " " + before
+
+
+def env(key: str):
+    value = os.environ.get(key)
+    if not value:
+        raise Exception(f"{value} not found in the environment")
+    return value

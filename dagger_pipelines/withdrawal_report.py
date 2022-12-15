@@ -1,8 +1,8 @@
 import sys
-
 import anyio
-
 import dagger
+
+from utils import env
 
 
 async def test():
@@ -10,7 +10,7 @@ async def test():
         dagger.Config(log_output=sys.stderr)
     ) as client:
         src_path = "/src"
-        config_files_path = "/home/fperez/jenkins"
+        config_files_path = env("CONFIG_FILES_PATH")
         src = client.host().directory(".")
         token = client.host().directory(config_files_path).file("token.json")
         config_file = (

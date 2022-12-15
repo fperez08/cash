@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 
 def get_ids(max_results: int = None, label_id: str = None, query: str = None):
     try:
-        log.info("Getting email ids...")
+        log.info(f"Getting email ids with gmail query: {query}")
         msg_service = google_services.get_gmail_messages()
         results = msg_service.list(
             userId="me",
@@ -19,7 +19,7 @@ def get_ids(max_results: int = None, label_id: str = None, query: str = None):
         messages = results.get("messages", [])
 
         if not messages:
-            log.error("Messages not found")
+            log.error(f"Messages not found with gmail query: {query}")
             return
 
         return list(map(lambda m: m["id"], messages))

@@ -41,7 +41,7 @@ def get_credentials(credentials_path: str):
     return credentials
 
 
-def generate_token(credentials_path: str, token_path: str):
+def generate_token(credentials_path: str):
     print("Generating auth token...please follow the instructions")
     flow = Flow.from_client_secrets_file(
         credentials_path,
@@ -54,5 +54,5 @@ def generate_token(credentials_path: str, token_path: str):
     code = input("Enter the authorization code: ")
     flow.fetch_token(code=code)
 
-    with open(f"{token_path}/token.json", "w") as token:
+    with open("token.json", "w") as token:
         token.write(flow.credentials.to_json())

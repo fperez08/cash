@@ -25,15 +25,14 @@ def get_params():
     my_parser.add_argument("--days", action="store", type=str, required=True)
 
     args = my_parser.parse_args()
-    arguments = args._get_kwargs()
-    return arguments[::-1]
+    return args._get_kwargs()
 
 
 def get_gmail_query():
     query = ""
     for param in get_params():
         key, value = param
-        if key != "days":
+        if key == "label":
             query = f"{key}:{value} "
         else:
             date_range = get_date_range(int(value))
@@ -55,5 +54,5 @@ def get_date_range(days: int):
 def env(key: str):
     value = os.environ.get(key)
     if not value:
-        raise Exception(f"{value} not found in the environment")
+        raise Exception(f"{key} not found in the environment")
     return value

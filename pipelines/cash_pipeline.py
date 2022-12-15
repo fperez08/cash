@@ -19,37 +19,7 @@ async def test():
             .with_mounted_directory("/src", src)
             # set current working directory for next commands
             .with_workdir("/src")
-            .with_exec(
-                [
-                    "curl"
-                    "-sSL"
-                    "https://install.python-poetry.org"
-                    "|"
-                    "python3"
-                    "-"
-                ]
-            )
-            .with_exec(
-                [
-                    "export"
-                    "PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
-                ]
-            )
-            # install test dependencies
-            .with_exec(["poetry", "install"])
-            # run tests
-            .with_exec(
-                [
-                    "poetry"
-                    "run"
-                    "python3"
-                    "main.py"
-                    "--label"
-                    "'withdrawal'"
-                    "--days"
-                    "1"
-                ]
-            )
+            .with_exec(["python3", "main.py"])
         )
 
         # execute

@@ -10,8 +10,6 @@ python = ">=3.10,<4.0"
 google-api-python-client = "^2.65.0"
 google-auth-httplib2 = "^0.1.0"
 google-auth-oauthlib = "^0.7.1"
-dagger-io = "^0.2.1"
-
 
 [tool.poetry.group.dev.dependencies]
 pylama = "^8.4.1"
@@ -20,6 +18,12 @@ black = "^22.10.0"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.2.0"
+
+[tool.poetry.group.pipeline]
+optional = true
+
+[tool.poetry.group.pipeline.dependencies]
+dagger-io = "^0.2.1"
 
 [build-system]
 requires = ["poetry-core"]

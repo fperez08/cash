@@ -4,7 +4,6 @@ import logging
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
-from utils import env
 
 
 SCOPES = [
@@ -20,10 +19,10 @@ def get_credentials(credentials_path: str):
     if not os.path.exists(credentials_path):
         raise FileNotFoundError(f"{credentials_path} file not found")
 
-    if os.path.exists(f"{env('TOKEN_PATH')}/token.json"):
+    if os.path.exists("token.json"):
         log.info("Generating credentials from authorized user file")
         credentials = Credentials.from_authorized_user_file(
-            f"{env('TOKEN_PATH')}/token.json", SCOPES
+            "token.json", SCOPES
         )
 
     if not credentials or not credentials.valid:
@@ -32,8 +31,8 @@ def get_credentials(credentials_path: str):
             log.info("Credentials expired...token needs to be refreshed")
             credentials.refresh(Request())
         else:
-            if os.path.exists(f"{env('TOKEN_PATH')}/token.json"):
-                os.remove(f"{env('TOKEN_PATH')}/token.json")
+            if os.path.exists("token.json"):
+                os.remove("token.json")
             raise Exception(
                 "Token expired create a new one by running python3 auth_token.py"
             )

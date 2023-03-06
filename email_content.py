@@ -23,8 +23,7 @@ def get_content(message: bytes, content_type: str = ""):
 
 
 def get_data(text_message: str, regex: str):
-    result = re.findall(regex, text_message)
-    return result
+    return re.findall(regex, text_message)
 
 
 def get_email_data(messages: list, regex: str):

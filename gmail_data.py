@@ -1,4 +1,5 @@
 import logging
+import csv
 
 from apis import gmail_messages as gmessage
 from logger import setup_global_logging
@@ -21,7 +22,11 @@ def main():
     messages_id = gmessage.get_ids(query=params.query)
     messages = gmessage.get_raw_content(messages_id)
     result = get_email_data(messages, params.regex)
-    log.info(result)
+
+    log.info("Saving data into csv file...")
+    with open("email_data.csv", "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(result)
 
 
 if __name__ == "__main__":

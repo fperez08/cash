@@ -136,3 +136,4 @@ token.json
 .vscode
 
 cash_config.json
+*.csv

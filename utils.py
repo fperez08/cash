@@ -18,10 +18,18 @@ def memoize(func):
     return memoized_func
 
 
-def get_params():
+def get_gmail_params():
     my_parser = argparse.ArgumentParser(allow_abbrev=False)
     my_parser.add_argument("--query", action="store", type=str, required=True)
     my_parser.add_argument("--regex", action="store", type=str, required=True)
+
+    return my_parser.parse_args()
+
+
+def get_sheets_params():
+    my_parser = argparse.ArgumentParser(allow_abbrev=False)
+    my_parser.add_argument("--file", action="store", type=str, required=True)
+    my_parser.add_argument("--range", action="store", type=str, required=True)
 
     return my_parser.parse_args()
 

@@ -4,7 +4,7 @@ import csv
 from apis import gmail_messages as gmessage
 from logger import setup_global_logging
 from email_content import get_email_data
-from utils import get_params
+from utils import get_gmail_params
 
 log = logging.getLogger(__name__)
 logger_list = [
@@ -17,7 +17,7 @@ logger_list = [
 
 def main():
     setup_global_logging(level=logging.DEBUG, loggers=logger_list)
-    params = get_params()
+    params = get_gmail_params()
 
     messages_id = gmessage.get_ids(query=params.query)
     messages = gmessage.get_raw_content(messages_id)

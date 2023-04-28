@@ -14,6 +14,18 @@ log = logging.getLogger(__name__)
 
 
 def get_credentials(credentials_path: str):
+    """Generate the google credentials from a token.json file
+
+    Args:
+        credentials_path (str): Path where the token.json file is located
+
+    Raises:
+        FileNotFoundError: Raise the exception in case the token.json is not found
+        Exception: Raise the exception when the token is expired and is not possible to refresh
+
+    Returns:
+        google.oauth2.credentials: Google oauth credentials
+    """
     credentials = None
 
     if not os.path.exists(credentials_path):
@@ -41,6 +53,11 @@ def get_credentials(credentials_path: str):
 
 
 def generate_token(credentials_path: str):
+    """Generates a url to give google app permissions and generate the token.json
+
+    Args:
+        credentials_path (str): Path where the google cloud credentials.json is located
+    """
     print("Generating auth token...please follow the instructions")
     flow = Flow.from_client_secrets_file(
         credentials_path,
